@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>__TITLE__</title>
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" />
+
+  <style>
+    :root { --brand: __ACCENT__; --bg: __BG__; }
+    html, body, .reveal-viewport { background: var(--bg); }
+
+    /* 每頁都是滿版圖片，取消 Reveal 的內距與圖片限制 */
+    .reveal .slides section { padding: 0; }
+    .reveal .slides section img {
+      display: block;
+      width: __W__px;
+      height: __H__px;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+    }
+
+    /* 圖片內文字的文字版，供螢幕報讀軟體使用，畫面上不顯示 */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .reveal .progress { color: var(--brand); }
+    /* 白色光暈讓箭頭在深淺背景上都看得見 */
+    .reveal .controls {
+      color: var(--brand);
+      filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff);
+    }
+    .reveal .slide-number {
+      left: 8px;
+      right: auto;
+      bottom: 8px;
+      background: rgba(29, 39, 51, 0.82);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+__TOC__
+
+<div class="reveal">
+  <div class="slides">
+__SECTIONS__
+  </div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+  // ── 為每張投影片隨機指定轉場效果 ──
+  (function () {
+    var transitions = ['zoom', 'convex', 'concave'];
+    var sections = document.querySelectorAll('.reveal .slides > section');
+    sections.forEach(function (sec) {
+      var t = transitions[Math.floor(Math.random() * transitions.length)];
+      sec.setAttribute('data-transition', t);
+    });
+  })();
+
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    controls: true,
+    progress: true,
+    center: false,
+    slideNumber: 'c/t',
+    width: __W__,
+    height: __H__,
+    margin: 0,
+    viewDistance: 2,
+    mobileViewDistance: 1,
+  });
+
+  // ── 切換投影片音效（Web Audio 合成翻頁聲，無需外部音檔） ──
+  (function () {
+    var audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        audioCtx = new AC();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playPageTurnSound() {
+      var ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        var duration = 0.22;
+        var bufferSize = Math.floor(ctx.sampleRate * duration);
+        var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        var data = buffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 1.6);
+        }
+        var noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        var filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.Q.value = 0.6;
+        filter.frequency.setValueAtTime(2200, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + duration);
+
+        var gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.22, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+        noise.stop(ctx.currentTime + duration);
+      } catch (e) {
+        /* 靜默失敗，不影響投影片操作 */
+      }
+    }
+
+    Reveal.on('slidechanged', playPageTurnSound);
+  })();
+</script>
+</body>
+</html>

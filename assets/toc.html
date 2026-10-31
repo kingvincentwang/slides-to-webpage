@@ -1,0 +1,123 @@
+<button id="toc-open" type="button" aria-haspopup="dialog">☰ 目錄</button>
+
+<dialog id="toc" aria-label="目錄">
+  <header>
+    <h2>__TITLE__</h2>
+    <button id="toc-close" type="button" aria-label="關閉目錄">✕</button>
+  </header>
+  __NAV__
+</dialog>
+<style>
+  /* 目錄按鈕放在頁碼旁邊，避免蓋住投影片左上角的標題 */
+  #toc-open {
+    position: fixed;
+    left: 96px;
+    bottom: 6px;
+    z-index: 40;
+    padding: 5px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--brand);
+    color: #fff;
+    font: 700 14px 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+  #toc {
+    width: min(460px, calc(100vw - 32px));
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+    background: #fff;
+    color: #1d2733;
+    font-family: 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  }
+  #toc::backdrop { background: rgba(15, 23, 35, 0.45); }
+  #toc header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--brand);
+    color: #fff;
+  }
+  #toc header h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  #toc-close { border: 0; background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+  #toc details { border-bottom: 1px solid #dfe5ec; }
+  #toc summary { padding: 13px 20px; font-size: 16px; font-weight: 700; cursor: pointer; }
+  #toc details.current summary { color: var(--brand); background: #eef3f8; }
+  #toc ul { list-style: none; margin: 0; padding: 0 0 8px; }
+  #toc li button {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 9px 20px 9px 34px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
+  }
+  #toc li button:hover { background: #eef3f8; }
+  #toc li button.current { color: var(--brand); font-weight: 700; }
+  #toc li small { color: #5d6b7a; font-size: 13px; }
+</style>
+<script>
+  // 目錄面板：跳到指定頁，並標示目前所在的章節
+  window.addEventListener('load', function () {
+    var toc = document.getElementById('toc');
+    var chapters = toc.querySelectorAll('details');
+    var buttons = toc.querySelectorAll('li button');
+
+    function markCurrent() {
+      var page = Reveal.getIndices().h + 1;
+      var chapter = null;
+      chapters.forEach(function (c) {
+        c.classList.remove('current');
+        if (Number(c.dataset.start) <= page) chapter = c;
+      });
+      if (chapter) {
+        chapter.classList.add('current');
+        chapter.open = true;
+      }
+      var active = null;
+      buttons.forEach(function (b) {
+        b.classList.remove('current');
+        if (Number(b.dataset.page) <= page) active = b;
+      });
+      if (active) active.classList.add('current');
+      return active;
+    }
+
+    document.getElementById('toc-open').addEventListener('click', function () {
+      var active = markCurrent();
+      Reveal.configure({ keyboard: false });
+      toc.showModal();
+      if (active) active.scrollIntoView({ block: 'center' });
+    });
+    document.getElementById('toc-close').addEventListener('click', function () {
+      toc.close();
+    });
+    toc.addEventListener('close', function () {
+      Reveal.configure({ keyboard: true });
+    });
+    toc.addEventListener('click', function (e) {
+      if (e.target === toc) toc.close();
+      var btn = e.target.closest('li button');
+      if (btn) {
+        Reveal.slide(Number(btn.dataset.page) - 1);
+        toc.close();
+      }
+    });
+  });
+</script>

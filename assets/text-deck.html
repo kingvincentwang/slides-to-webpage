@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TODO 標題</title>
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" />
+  <!-- 依來源字型調整；載入失敗時會退回 --sans 後面的系統字型 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" />
+
+  <style>
+    /* ── Design tokens：改成來源的配色 ── */
+    :root {
+      --ink:    #1f1d1a;
+      --body:   #4a443d;
+      --muted:  #857b6e;
+      --brand:  #b5532f;
+      --tint:   #efe6d8;
+      --line:   #e2d9cb;
+      --card:   #fffdf9;
+      --sans:   'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+      --mono:   'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+      --radius: 14px;
+    }
+
+    .reveal { font-family: var(--sans); font-size: 24px; color: var(--ink); }
+    .reveal .slides { text-align: left; }
+    .reveal .slides > section {
+      box-sizing: border-box;
+      width: 1280px;
+      height: 720px;
+      padding: 52px 72px;
+      text-align: left;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: var(--sans);
+      color: inherit;
+      text-transform: none;
+      letter-spacing: 0;
+      margin: 0;
+      text-shadow: none;
+    }
+    .reveal p { margin: 0; line-height: 1.55; }
+    .reveal strong { color: var(--brand); font-weight: 700; }
+    .reveal code {
+      font-family: var(--mono);
+      font-size: 0.9em;
+      color: var(--brand);
+      background: var(--tint);
+      padding: 0.08em 0.4em;
+      border-radius: 5px;
+    }
+
+    /* ── 頁首 ── */
+    .eyebrow { font-family: var(--mono); font-size: 19px; font-weight: 600; color: var(--brand); margin-bottom: 8px; }
+    .reveal h2.title { font-size: 44px; font-weight: 900; line-height: 1.25; margin-bottom: 30px; }
+
+    /* ── 提示列 ── */
+    .tip {
+      margin-top: 24px;
+      padding: 15px 24px;
+      background: var(--tint);
+      border-radius: var(--radius);
+      font-size: 22px;
+      color: var(--body);
+    }
+
+    /* ── 卡片與欄位 ── */
+    .cols { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 28px; }
+    .card h3 { font-size: 27px; font-weight: 700; margin-bottom: 8px; }
+    .card p { font-size: 21px; color: var(--body); }
+
+    /* ── 程式碼 ── */
+    .reveal pre.code {
+      box-sizing: border-box;
+      width: 100%;
+      margin: 0;
+      padding: 28px 30px;
+      background: var(--ink);
+      border-radius: var(--radius);
+      box-shadow: none;
+      font-family: var(--mono);
+      font-size: 20px;
+      line-height: 1.65;
+      color: #e8e4dc;
+      white-space: pre-wrap;
+    }
+
+    /* ── 表格 ── */
+    .reveal table.data {
+      width: 100%;
+      margin: 0;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .reveal table.data th, .reveal table.data td {
+      padding: 15px 22px;
+      border-bottom: 1px solid var(--line);
+      font-size: 22px;
+      line-height: 1.4;
+      text-align: left;
+    }
+    .reveal table.data th { background: var(--ink); color: #fff; border-bottom: 0; }
+    .reveal table.data tr:last-child td { border-bottom: 0; }
+
+    /* ── Reveal overrides ── */
+    .reveal .progress { color: var(--brand); }
+    .reveal .controls { color: var(--brand); }
+    .reveal.has-dark-background .progress,
+    .reveal.has-dark-background .controls { color: #fff; }
+    .reveal .slide-number { background: transparent; color: var(--muted); font-family: var(--mono); left: 12px; right: auto; }
+    .reveal.has-dark-background .slide-number { color: #eee; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- 每頁一個 section；data-background-color 才會滿版 -->
+    <section data-background-color="#f7f4ee">
+      <p class="eyebrow">TODO 章節</p>
+      <h2 class="title">TODO 標題</h2>
+      <div class="tip"><p>TODO 內容</p></div>
+      <aside class="notes">TODO 備忘稿（沒有就刪除這行）</aside>
+    </section>
+
+  </div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  // ── 為每張投影片隨機指定轉場效果 ──
+  (function () {
+    var transitions = ['zoom', 'convex', 'concave'];
+    var sections = document.querySelectorAll('.reveal .slides > section');
+    sections.forEach(function (sec) {
+      var t = transitions[Math.floor(Math.random() * transitions.length)];
+      sec.setAttribute('data-transition', t);
+    });
+  })();
+
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    controls: true,
+    progress: true,
+    center: false,
+    slideNumber: 'c/t',
+    width: 1280,
+    height: 720,
+    margin: 0,
+    plugins: [RevealNotes],
+  });
+
+  // ── 切換投影片音效（Web Audio 合成翻頁聲，無需外部音檔） ──
+  (function () {
+    var audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        audioCtx = new AC();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playPageTurnSound() {
+      var ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        var duration = 0.22;
+        var bufferSize = Math.floor(ctx.sampleRate * duration);
+        var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        var data = buffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 1.6);
+        }
+        var noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        var filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.Q.value = 0.6;
+        filter.frequency.setValueAtTime(2200, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + duration);
+
+        var gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.22, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+        noise.stop(ctx.currentTime + duration);
+      } catch (e) {
+        /* 靜默失敗，不影響投影片操作 */
+      }
+    }
+
+    Reveal.on('slidechanged', playPageTurnSound);
+  })();
+</script>
+</body>
+</html>
