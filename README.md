@@ -44,3 +44,7 @@ Windows PowerShell 請把路徑換成 `"$env:USERPROFILE\.claude\skills\slides-t
 ## 公開成品前
 
 GitHub Pages 的頁面任何人都看得到。請確認已遮蔽金鑰、帳號等資料，人物照片已取得同意，並有權公開該文件。
+
+## 授權
+
+[MIT](LICENSE)
